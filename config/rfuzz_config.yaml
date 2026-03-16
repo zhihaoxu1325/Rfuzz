@@ -1,0 +1,14 @@
+project:
+  name: RFuzz
+  arch: riscv64
+paths:
+  kernel_source: data/kernel_source
+  syzlang_initial: data/syzlang_output/initial
+  syzlang_refined: data/syzlang_output/refined
+  corpus: data/corpus
+  coverage: data/coverage
+  crashes: data/crashes
+  logs: data/logs
+pipeline:
+  min_coverage_gain: 1
+  max_refine_rounds: 3

@@ -1,0 +1,1 @@
+"""RFuzz data models."""
