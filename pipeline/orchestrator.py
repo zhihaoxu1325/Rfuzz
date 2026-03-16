@@ -5,17 +5,18 @@ from fuzzer.corpus_manager import save_seed
 from fuzzer.fuzzer_engine import FuzzerEngine
 from interface_profiler.profiler import InterfaceProfiler
 from llm_refiner.coverage_analyzer import pick_candidates
+from llm_refiner.llm_client import LLMClient
 from llm_refiner.refiner import LLMRefiner
 from utils.file_utils import ensure_dir
 from utils.metrics import PipelineMetrics
 
 
 class Orchestrator:
-    def __init__(self, min_coverage_gain: int = 1) -> None:
+    def __init__(self, min_coverage_gain: int = 1, llm_client: LLMClient | None = None) -> None:
         self.profiler = InterfaceProfiler()
         self.constructor = DSLConstructor()
         self.fuzzer = FuzzerEngine()
-        self.refiner = LLMRefiner(min_coverage_gain=min_coverage_gain)
+        self.refiner = LLMRefiner(client=llm_client, min_coverage_gain=min_coverage_gain)
 
     def run(
         self,

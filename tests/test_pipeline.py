@@ -2,6 +2,14 @@ from interface_profiler.profiler import InterfaceProfiler
 from pipeline.orchestrator import Orchestrator
 
 
+class StubLLMClient:
+    def refine(self, prompt: str) -> str:
+        return "sys_riscv_flush_icache(int32)"
+
+    def estimate_coverage_gain(self, baseline: str, refined: str) -> int:
+        return 2
+
+
 def test_interface_profiler_filters_enodev(tmp_path):
     syscall_tbl = tmp_path / "syscall.tbl"
     syscall_tbl.write_text("0 common read sys_read\n", encoding="utf-8")
@@ -31,7 +39,7 @@ def test_pipeline_runs_end_to_end_with_corpus_feedback(tmp_path):
     refined = tmp_path / "refined"
     corpus = tmp_path / "corpus"
 
-    metrics = Orchestrator().run(syscall_tbl, config, refined, corpus_dir=corpus)
+    metrics = Orchestrator(llm_client=StubLLMClient()).run(syscall_tbl, config, refined, corpus_dir=corpus)
     assert metrics.interfaces_profiled == 2
     assert metrics.seeds_generated == 2
     assert metrics.accepted_refinements >= 1
